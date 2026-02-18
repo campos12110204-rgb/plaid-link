@@ -33,7 +33,9 @@
           .then(res => res.json())
           .then(result => {
             console.log("Access token:", result.access_token);
-            alert("Bank Connected Successfully!");
+          .then(result => {
+            window.location.href = "myapp://success";
+          });
           })
           .catch(err => {
             console.error("Error exchanging token:", err);
