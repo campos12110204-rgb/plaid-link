@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Plaid Link</title>
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+</head>
+<body>
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+
+  if (!token) {
+    document.body.innerHTML = "Missing link token.";
+  } else {
+    const handler = Plaid.create({
+      token: token,
+      onSuccess: function(public_token, metadata) {
+        fetch("https://plaid-backend-8vsj.onrender.com/exchange_token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ public_token })
+        });
+        alert("Bank Connected Successfully!");
+      },
+      onExit: function(err, metadata) {
+        console.log("User exited");
+      }
+    });
+
+    handler.open();
+  }
+</script>
+</body>
+</html>
