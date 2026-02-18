@@ -23,21 +23,25 @@
         const handler = Plaid.create({
           token: data.link_token,
           onSuccess: function(public_token, metadata) {
-            fetch(`${BACKEND_URL}/exchange_public_token`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ public_token })
-            })
-            .then(res => res.json())
-            .then(result => {
-              console.log("Access token:", result.access_token);
-              alert("Bank Connected Successfully!");
-            })
-            .catch(err => {
-              console.error("Error exchanging token:", err);
-              alert("Failed to connect bank.");
-            });
-          },
+  fetch(`${BACKEND_URL}/exchange_public_token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      public_token, 
+      user_id: "flutterflow-user"  // <- add this!
+    })
+  })
+  .then(res => res.json())
+  .then(result => {
+    console.log("Access token:", result.access_token);
+    alert("Bank Connected Successfully!");
+  })
+  .catch(err => {
+    console.error("Error exchanging token:", err);
+    alert("Failed to connect bank.");
+  });
+}
+,
           onExit: function(err, metadata) {
             console.log("User exited Plaid Link", err, metadata);
           }
