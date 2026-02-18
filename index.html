@@ -1,38 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Plaid Link</title>
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+</head>
+<body>
+  <h2>Connecting your bank...</h2>
 <script>
   const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com";
 
-  fetch(`${BACKEND_URL}/create_link_token`, { method: "POST" })
+  // Fetch the link token from backend
+  fetch(${BACKEND_URL}/create_link_token, { method: "POST" })
     .then(res => res.json())
     .then(data => {
-
       if (!data.link_token) {
         document.body.innerHTML = "Failed to fetch link token.";
         return;
       }
 
+      // Initialize Plaid Link
       const handler = Plaid.create({
         token: data.link_token,
-
         onSuccess: function(public_token, metadata) {
-
-          fetch(`${BACKEND_URL}/exchange_public_token`, {
+          // Send public_token to backend to get access_token
+          fetch(${BACKEND_URL}/exchange_public_token, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ public_token: public_token })
+            body: JSON.stringify({ public_token })
           })
           .then(res => res.json())
           .then(result => {
             console.log("Access token:", result.access_token);
-
-            // ✅ Redirect back to app
-            window.location.href = "myapp://success";
+            alert("Bank Connected Successfully!");
           })
           .catch(err => {
             console.error("Error exchanging token:", err);
             alert("Failed to connect bank.");
           });
         },
-
         onExit: function(err, metadata) {
           console.log("User exited Plaid Link", err, metadata);
         }
@@ -45,3 +50,5 @@
       document.body.innerHTML = "Error fetching link token.";
     });
 </script>
+</body>
+</html>
