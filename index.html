@@ -7,10 +7,10 @@
 <body>
   <h2>Connecting your bank...</h2>
 <script>
-  const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com"; // your backend URL
-  const SAVINGS_PAGE_URL = "https://your-flutterflow-app.com/savings"; // replace with your Savings Page URL
+  const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com"; // Your backend
+  const SAVINGS_PAGE_URL = "https://your-flutterflow-app.com/savings?bank=connected"; // FlutterFlow page
 
-  // Fetch the link token from backend
+  // Fetch link token from backend
   fetch(`${BACKEND_URL}/create_link_token`, { method: "POST" })
     .then(res => res.json())
     .then(data => {
@@ -23,7 +23,7 @@
       const handler = Plaid.create({
         token: data.link_token,
         onSuccess: function(public_token, metadata) {
-          // Send public_token to backend to get access_token
+          // Send public_token to backend
           fetch(`${BACKEND_URL}/exchange_public_token`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
