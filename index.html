@@ -6,11 +6,12 @@
 </head>
 <body>
   <h2>Connecting your bank...</h2>
+
 <script>
   const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com";
 
   // Fetch the link token from backend
-  fetch(${BACKEND_URL}/create_link_token, { method: "POST" })
+  fetch(`${BACKEND_URL}/create_link_token`, { method: "POST" })
     .then(res => res.json())
     .then(data => {
       if (!data.link_token) {
@@ -23,7 +24,7 @@
         token: data.link_token,
         onSuccess: function(public_token, metadata) {
           // Send public_token to backend to get access_token
-          fetch(${BACKEND_URL}/exchange_public_token, {
+          fetch(`${BACKEND_URL}/exchange_public_token`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ public_token })
