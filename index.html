@@ -7,7 +7,8 @@
 <body>
   <h2>Connecting your bank...</h2>
 <script>
-  const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com";
+  const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com"; // your backend URL
+  const SAVINGS_PAGE_URL = "https://your-flutterflow-app.com/savings"; // replace with your Savings Page URL
 
   // Fetch the link token from backend
   fetch(`${BACKEND_URL}/create_link_token`, { method: "POST" })
@@ -30,8 +31,10 @@
           })
           .then(res => res.json())
           .then(result => {
-            console.log("Access token:", result.access_token);
-            alert("Bank Connected Successfully!");
+            console.log("Bank connected successfully");
+
+            // Redirect to FlutterFlow Savings Page
+            window.location.href = SAVINGS_PAGE_URL;
           })
           .catch(err => {
             console.error("Error exchanging token:", err);
