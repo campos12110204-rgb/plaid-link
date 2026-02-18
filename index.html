@@ -6,11 +6,10 @@
 </head>
 <body>
   <h2>Connecting your bank...</h2>
-<script>
-  const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com"; // Your backend
-  const SAVINGS_PAGE_URL = "https://your-flutterflow-app.com/savings?bank=connected"; // FlutterFlow page
 
-  // Fetch link token from backend
+<script>
+  const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com";
+
   fetch(`${BACKEND_URL}/create_link_token`, { method: "POST" })
     .then(res => res.json())
     .then(data => {
@@ -19,11 +18,11 @@
         return;
       }
 
-      // Initialize Plaid Link
       const handler = Plaid.create({
         token: data.link_token,
+
         onSuccess: function(public_token, metadata) {
-          // Send public_token to backend
+
           fetch(`${BACKEND_URL}/exchange_public_token`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -31,27 +30,22 @@
           })
           .then(res => res.json())
           .then(result => {
+
             console.log("Bank connected successfully");
 
-            // Redirect to FlutterFlow Savings Page
-            window.location.href = SAVINGS_PAGE_URL;
+            // 🔥 THIS IS THE ONLY REDIRECT YOU NEED
+            window.location.href = "bankconnected://success";
+
           })
           .catch(err => {
-            console.error("Error exchanging token:", err);
             alert("Failed to connect bank.");
           });
-        },
-        onExit: function(err, metadata) {
-          console.log("User exited Plaid Link", err, metadata);
         }
       });
 
       handler.open();
-    })
-    .catch(err => {
-      console.error("Error fetching link token:", err);
-      document.body.innerHTML = "Error fetching link token.";
     });
 </script>
+
 </body>
 </html>
