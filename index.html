@@ -38,23 +38,24 @@ document.getElementById('connectBtn').addEventListener('click', () => {
       token: data.link_token,
 
       onSuccess: function(public_token) {
-        console.log("Plaid success, sending to backend…");
+  console.log("Plaid success, sending to backend…");
 
-        fetch(`${BACKEND_URL}/exchange_public_token`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ public_token, user_id })
-        })
-        .then(res => res.json())
-        .then(() => {
-          console.log("Exchange successful, redirecting…");
-          window.location.href = "myapp://plaid-success";
-        })
-        .catch(err => {
-          console.error("Failed to exchange token:", err);
-          alert("Failed to connect bank");
-        });
-      },
+  fetch(`${BACKEND_URL}/exchange_public_token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ public_token, user_id })
+  })
+  .then(res => res.json())
+  .then(() => {
+    console.log("Exchange successful, redirecting…");
+    // Redirect to success page that FlutterFlow can detect
+    window.location.href = "https://campos12110204-rgb.github.io/plaid-link/success.html";
+  })
+  .catch(err => {
+    console.error("Failed to exchange token:", err);
+    alert("Failed to connect bank");
+  });
+},
 
       onExit: function(err, metadata) {
         console.log("User exited Plaid Link", err, metadata);
