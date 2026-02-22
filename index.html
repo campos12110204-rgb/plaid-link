@@ -49,7 +49,7 @@ document.getElementById('connectBtn').addEventListener('click', () => {
   .then(() => {
     console.log("Exchange successful, redirecting…");
     // Redirect to success page that FlutterFlow can detect
-    window.location.href = "https://campos12110204-rgb.github.io/plaid-link/success.html";
+    window.close();
   })
   .catch(err => {
     console.error("Failed to exchange token:", err);
