@@ -5,16 +5,34 @@
   <title>Bank Connected</title>
   <style>
     body {
-      background-color: black; /* optional, makes white text visible */
-      color: white; /* sets all text to white */
-      text-align: center; /* centers the text */
-      font-family: Arial, sans-serif; /* optional, nicer font */
-      padding-top: 50px; /* adds space from top */
+      background-color: black; /* keeps text visible */
+      color: white; /* white text */
+      text-align: center; /* centers content */
+      font-family: Arial, sans-serif; /* nicer font */
+      padding-top: 50px; /* space from top */
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      background-color: white;
+      color: black;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #ddd;
     }
   </style>
 </head>
 <body>
   <h1>Bank Connected Successfully!</h1>
   <p>You can now return to the app.</p>
+
+  <!-- Button to close WebView -->
+  <button onclick="window.close();">Return to App</button>
 </body>
 </html>
