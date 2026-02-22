@@ -49,7 +49,7 @@ document.getElementById('connectBtn').addEventListener('click', () => {
   .then(() => {
     console.log("Exchange successful, redirecting…");
     // Redirect to success page that FlutterFlow can detect
-    window.close();
+    window.ReactNativeWebView.postMessage("bank_connected"); // <-- send message
   })
   .catch(err => {
     console.error("Failed to exchange token:", err);
