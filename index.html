@@ -38,24 +38,27 @@ document.getElementById('connectBtn').addEventListener('click', () => {
       token: data.link_token,
 
       onSuccess: function(public_token) {
-  console.log("Plaid success, sending to backend…");
+        console.log("Plaid success, sending to backend…");
 
-  fetch(`${BACKEND_URL}/exchange_public_token`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ public_token, user_id })
-  })
-  .then(res => res.json())
-  .then(() => {
-    console.log("Exchange successful, redirecting…");
-    // Redirect to success page that FlutterFlow can detect
-    window.ReactNativeWebView.postMessage("bank_connected"); // <-- send message
-  })
-  .catch(err => {
-    console.error("Failed to exchange token:", err);
-    alert("Failed to connect bank");
-  });
-},
+        // Exchange token with backend
+        fetch(`${BACKEND_URL}/exchange_public_token`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ public_token, user_id })
+        })
+        .then(res => res.json())
+        .then(() => {
+          console.log("Exchange successful, redirecting…");
+
+          // Redirect to FlutterFlow deep link
+          // FlutterFlow will detect this in WebView onUrlChanged
+          window.location.href = `myapp://bank-success?public_token=${public_token}`;
+        })
+        .catch(err => {
+          console.error("Failed to exchange token:", err);
+          alert("Failed to connect bank");
+        });
+      },
 
       onExit: function(err, metadata) {
         console.log("User exited Plaid Link", err, metadata);
