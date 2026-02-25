@@ -8,15 +8,19 @@
   <h2>Connect your bank</h2>
   <button id="connectBtn">Connect Bank</button>
 
+  <div id="status" style="margin-top: 20px; font-family: sans-serif;"></div>
+
 <script>
 const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com";
-  // Get user_id from URL (default to "unknown" if missing)
+
+// Get user_id from URL
 const params = new URLSearchParams(window.location.search);
 const user_id = params.get("user_id") || "unknown";
 
-document.getElementById('connectBtn').addEventListener('click', () => {
+const statusDiv = document.getElementById("status");
 
-  console.log("Fetching link token from backend…");
+document.getElementById('connectBtn').addEventListener('click', () => {
+  statusDiv.innerText = "Fetching link token…";
 
   fetch(`${BACKEND_URL}/create_link_token`, {
     method: "POST",
@@ -25,19 +29,19 @@ document.getElementById('connectBtn').addEventListener('click', () => {
   })
   .then(res => res.json())
   .then(data => {
-    console.log("Backend response:", data);
-
     if (!data.link_token) {
       console.error("No link token returned:", data);
       alert("Failed to fetch link token");
       return;
     }
 
+    statusDiv.innerText = "Opening Plaid…";
+
     const handler = Plaid.create({
       token: data.link_token,
 
       onSuccess: function(public_token) {
-        console.log("Plaid success, sending to backend…");
+        statusDiv.innerText = "Bank connected! Saving…";
 
         // Exchange token with backend
         fetch(`${BACKEND_URL}/exchange_public_token`, {
@@ -47,20 +51,19 @@ document.getElementById('connectBtn').addEventListener('click', () => {
         })
         .then(res => res.json())
         .then(() => {
-          console.log("Exchange successful, redirecting…");
-
-          // Redirect to FlutterFlow deep link
-          // FlutterFlow will detect this in WebView onUrlChanged
-        window.location.href = `${BACKEND_URL}/plaid-success`;
+          statusDiv.innerHTML = "✅ Bank connected successfully!<br>You may now return to the app.";
+          console.log("Exchange successful");
+          // No redirect needed
         })
         .catch(err => {
           console.error("Failed to exchange token:", err);
-          alert("Failed to connect bank");
+          statusDiv.innerText = "Failed to connect bank";
         });
       },
 
       onExit: function(err, metadata) {
         console.log("User exited Plaid Link", err, metadata);
+        statusDiv.innerText = "Plaid exited. Bank not connected.";
       }
     });
 
@@ -68,7 +71,7 @@ document.getElementById('connectBtn').addEventListener('click', () => {
   })
   .catch(err => {
     console.error("Failed to fetch link token:", err);
-    alert("Failed to fetch link token");
+    statusDiv.innerText = "Failed to fetch link token";
   });
 
 });
