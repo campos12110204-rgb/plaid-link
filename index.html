@@ -3,17 +3,22 @@
 <head>
   <title>Plaid Link</title>
   <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    #status { margin-top: 20px; font-size: 16px; }
+    button { padding: 12px 24px; font-size: 16px; }
+  </style>
 </head>
 <body>
+
   <h2>Connect your bank</h2>
   <button id="connectBtn">Connect Bank</button>
-
-  <div id="status" style="margin-top: 20px; font-family: sans-serif;"></div>
+  <div id="status">Bank not connected yet</div>
 
 <script>
 const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com";
 
-// Get user_id from URL
+// Get user_id from URL parameters
 const params = new URLSearchParams(window.location.search);
 const user_id = params.get("user_id") || "unknown";
 
@@ -31,7 +36,7 @@ document.getElementById('connectBtn').addEventListener('click', () => {
   .then(data => {
     if (!data.link_token) {
       console.error("No link token returned:", data);
-      alert("Failed to fetch link token");
+      statusDiv.innerText = "Failed to fetch link token";
       return;
     }
 
@@ -43,7 +48,7 @@ document.getElementById('connectBtn').addEventListener('click', () => {
       onSuccess: function(public_token) {
         statusDiv.innerText = "Bank connected! Saving…";
 
-        // Exchange token with backend
+        // Exchange public_token with backend
         fetch(`${BACKEND_URL}/exchange_public_token`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -53,7 +58,6 @@ document.getElementById('connectBtn').addEventListener('click', () => {
         .then(() => {
           statusDiv.innerHTML = "✅ Bank connected successfully!<br>You may now return to the app.";
           console.log("Exchange successful");
-          // No redirect needed
         })
         .catch(err => {
           console.error("Failed to exchange token:", err);
