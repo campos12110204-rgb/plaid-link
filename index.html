@@ -51,7 +51,7 @@ document.getElementById('connectBtn').addEventListener('click', () => {
 
           // Redirect to FlutterFlow deep link
           // FlutterFlow will detect this in WebView onUrlChanged
-          window.location.href = `myapp://bank-success?public_token=${public_token}`;
+        window.location.href = `${BACKEND_URL}/plaid-success`;
         })
         .catch(err => {
           console.error("Failed to exchange token:", err);
