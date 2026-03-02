@@ -21,6 +21,7 @@ const BACKEND_URL = "https://plaid-backend-8vsj.onrender.com";
 // Get user_id from URL parameters
 const params = new URLSearchParams(window.location.search);
 const user_id = params.get("user_id");
+  console.log("User ID from URL:", user_id);
 if (!user_id) {
   alert("ERROR: user_id missing!");
 }
